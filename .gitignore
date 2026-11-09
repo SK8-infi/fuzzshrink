@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+build/
+dist/
+.ipynb_checkpoints/
+
+# Data: never committed, rebuilt by scripts/
+data/raw/
+data/cache/
+
+# Bulky intermediate experiment output (summaries in results/ are committed)
+results/runs/
+
+# Local tool settings
+.claude/settings.local.json
+
+# OS
+.DS_Store
+Thumbs.db
