@@ -10,6 +10,8 @@ A Business Economics course project at ABV-IIITM Gwalior. Machine-learning portf
 > - **Two of our design changes still matter.** The draft's original combination rule blows up (235% annualised volatility); our "angle" rule is safe by construction. Fuzzy memberships also beat hard clusters in every seed.
 > - **Clustering adds nothing here.** A simulation shows *when* cluster information can help. The best real-data estimator, Ledoit–Wolf (2020) nonlinear shrinkage, needs no clustering at all.
 >
+> - **Head to head, we beat the base paper's pipeline.** On its own 85-stock universe and period, our pipeline outperforms a faithful rebuild of it: Sharpe 0.68 vs 0.58, volatility 21.9% vs 24.1% (significant), drawdown −28.7% vs −34.0%, with all three pre-registered hypotheses supported ([§6.5](#65-head-to-head-against-the-base-paper-stage-7)).
+>
 > Details are in [§6](#6-results).
 
 ---
@@ -155,7 +157,54 @@ On a ₹1,000 crore book, 40 bps a year is ₹4 crore. Better risk estimates are
    - the simulation gives a theory of *when* cluster information helps, and of which signal to condition on (fit, not entropy).
 4. **The negative result is credible because it was pre-registered.** The draft itself promised to report the permutation control and the mechanism test "whatever they show". We did.
 
-### 6.5 Limitations
+### 6.5 Head-to-head against the base paper (stage 7)
+
+We rebuilt the base paper's three-module pipeline and ran it against our own pipeline, both fixed in advance ([protocol](docs/protocol-base-comparison.md)), on identical data:
+
+- **The base paper's universe.** 85 of its 88 Appendix-1 stocks; three were delisted after 2024. Our daily statistics match its appendix to a median of 0.0002.
+- **The base paper's period.** 2017 is used for training, and 2018–2024 is out of sample.
+- **Identical rules.** Long-only, monthly rebalancing, 30% cap per stock, 10 bps costs, 5 seeds.
+
+The two pipelines:
+
+- **B, the reconstruction:** fuzzy clustering on risk-return features → LSTM forecasts → an NSGA-II genetic algorithm on the sample covariance.
+- **P, ours:** the same LSTM forecasts, with four evidence-based changes:
+  - co-movement fuzzy selection;
+  - forecasts shrunk halfway to the cross-sectional mean;
+  - Ledoit–Wolf (2020) nonlinear covariance;
+  - an exact maximum-Sharpe optimiser.
+
+![Head-to-head](results/figures/fig6_base_comparison.png)
+
+| After costs, 2018–2024 | Base reconstruction (B) | **Ours (P)** |
+|---|---|---|
+| Sharpe ratio (primary) | 0.582 ± 0.094 | **0.680 ± 0.065** |
+| Annual return | 14.1% | **14.9%** |
+| Volatility | 24.1% | **21.9%** |
+| Maximum drawdown | −34.0% | **−28.7%** |
+| Calmar ratio | 0.41 | **0.52** |
+| Cumulative return | 120% | **140%** |
+| Turnover per month | 1.47 | **1.21** |
+
+All three pre-registered hypotheses are supported:
+
+- **B1, Sharpe:** higher in the seed mean and in 4 of 5 seeds.
+- **B2, volatility:** lower, with Diebold–Mariano p = 0.033.
+- **B3, drawdown:** smaller.
+
+The ablation ladder in [results/base_comparison/README.md](results/base_comparison/README.md) shows where the gain comes from:
+
+- **Shrinking the LSTM forecasts is the biggest single step** (Sharpe 0.596 → 0.670).
+- **Co-movement selection** cuts the drawdown and makes results more stable across seeds (Sharpe standard deviation 0.065 against 0.094).
+
+Two honest caveats:
+
+1. **The Sharpe gap is not statistically significant on its own** (HAC p = 0.80); seven years is short for that. The volatility gain is significant.
+2. **Neither ML pipeline beats simple benchmarks in this period.** Equal weight across the 85 stocks (Sharpe 1.03) and QQQ (0.85) both do better. The base paper reports beating its benchmarks; our reconstruction cannot confirm that, which may reflect differences from the paper's unpublished details.
+
+If you can get the paper's own tables (IIITM's Springer access), add them next to these numbers, labelled as an indirect comparison.
+
+### 6.6 Limitations
 
 - Current constituents only, so the results carry survivorship bias, as in the base paper.
 - One market and one period: tech-heavy and mostly a bull market.

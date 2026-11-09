@@ -170,7 +170,30 @@ def fig_rolling(configs: dict[str, str], base: str = "A1"):
     _finish(fig, "fig5_rolling_variance_ratio.png")
 
 
+def fig_base_comparison():
+    """Growth of 1 for the base-paper reconstruction (B) and our pipeline (P), seed-averaged."""
+    runs = []
+    for p in sorted(Path("results/runs/base").glob("seed*.pkl")):
+        with open(p, "rb") as fh:
+            runs.append(pickle.load(fh)["net"])
+    if not runs:
+        return
+    net = sum(r[["B", "P"]] for r in runs) / len(runs)
+    wealth = (1 + net).cumprod()
+    dd = wealth / wealth.cummax() - 1
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(7.2, 5.2), sharex=True, gridspec_kw={"height_ratios": [2, 1]})
+    for c, lab, col in (("B", "Base-paper reconstruction (B)", SLOT[0]), ("P", "Our pipeline (P)", SLOT[1])):
+        ax1.plot(wealth.index, wealth[c], color=col, label=lab, linewidth=1.8)
+        ax2.plot(dd.index, 100 * dd[c], color=col, linewidth=1.4)
+    ax1.set_ylabel("Growth of 1 (after costs)")
+    ax1.set_title("Head-to-head on the base paper's universe, 2018–2024 (average of 5 seeds)")
+    ax1.legend(loc="upper left", fontsize=8)
+    ax2.set_ylabel("Drawdown (%)")
+    _finish(fig, "fig6_base_comparison.png")
+
+
 if __name__ == "__main__":
+    fig_base_comparison()
     fig_sim_intensity()
     fig_sim_loss()
     fig_backtest_sd(
