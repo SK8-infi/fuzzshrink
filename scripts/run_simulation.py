@@ -130,6 +130,7 @@ def write_report(df, diag, preds, out: Path, reps: int, seconds: float):
                  .agg(["mean", "sem"]).reset_index())
     summary.to_csv(out / "summary.csv", index=False)
     preds.to_csv(out / "predictions.csv", index=False)
+    diag.to_csv(out / "diagnostics.csv.gz", index=False)
 
     table = summary[~summary.oracle].pivot_table(index="config", columns=["scenario", "T"], values="mean")
     table = table.reindex(columns=[(s, T) for s in SCENARIOS for T in T_VALUES])

@@ -178,6 +178,14 @@ def test_fuzzshrink_is_valid_covariance(stats, kw):
     assert min_eig(Sigma) > 0
 
 
+def test_delta0_scale_rescales_only_the_base_intensity(stats):
+    U = random_memberships(stats.N, 3, seed=12)
+    _, base = fuzzshrink(stats, U)
+    _, half = fuzzshrink(stats, U, delta0_scale=0.5)
+    assert half["delta0"] == pytest.approx(0.5 * base["delta0"])
+    np.testing.assert_allclose(half["delta"], np.minimum(1.0, 0.5 * base["delta0"] * (1 - base["entropy"])))
+
+
 def test_fuzzshrink_is_permutation_equivariant(stats):
     U = random_memberships(stats.N, 3, seed=10)
     perm = np.random.default_rng(1).permutation(stats.N)
