@@ -1,0 +1,11 @@
+# Core package
+numpy>=1.24
+scipy>=1.10
+pandas>=2.0
+# Experiments, data download and figures
+matplotlib>=3.7
+yfinance>=0.2.40
+lxml>=4.9
+requests>=2.31
+# Tests
+pytest>=7.4
