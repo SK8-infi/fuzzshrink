@@ -48,7 +48,7 @@ All FuzzShrink variants use the angle combination, the closed-form base intensit
 
 | ID | Estimator | Question |
 |---|---|---|
-| X1 | FuzzShrink, γ = +1, typicality weights | Does targeting only outliers beat entropy? |
+| X1 | FuzzShrink, γ = +1, fit weights (method §4.1) | Does measuring fit to the target directly beat entropy as a proxy? |
 | X2 | Block-pair target, γ = +1, entropy weights | Does a richer target help? |
 | X3 | A4 with the draft's arithmetic combination and projection | What does PSD-by-construction cost or gain? |
 | X4 | A4 with risk-return clustering features | Do the base paper's features carry correlation structure? |
@@ -85,7 +85,7 @@ All FuzzShrink variants use the angle combination, the closed-form base intensit
 - Average condition number of Σ̂.
 - Rate of Lemma 1 failures.
 - X3 projection activation rate and Frobenius distance moved.
-- Average C, entropy, typicality and δ₀.
+- Average C, entropy and δ₀.
 
 **Economic value.** The change in certainty-equivalent return of switching from A1 to configuration k:
 
@@ -130,7 +130,7 @@ There are three asset types:
 |---|---|---|
 | Crisp | One-hot | aᵢ ~ U(0.4, 0.6), bᵢ ~ U(0.5, 0.7) |
 | Bridge | Dirichlet(1, 1) over two random groups | As crisp |
-| Outlier | One-hot to a random group | bᵢ ~ U(0.05, 0.15), plus one private "pair factor" shared with one random other asset, loading 0.5 |
+| Outlier | Uniform 1/C* (belongs to no group) | No group loading (bᵢ = 0), a lower market loading aᵢ ~ U(0.15, 0.35), and a private "pair factor" shared with one other outlier, loading 0.6 |
 
 Daily volatilities are σᵢ ~ U(0.01, 0.03).
 
@@ -146,8 +146,10 @@ Excess out-of-sample variance of the GMV portfolio under the true Σ: L = w_kᵀ
 
 - **S1.** With crisp groups only, A2, A3 and A4 are within 5% of each other in mean loss.
 - **S2.** With bridges, A3 beats A2. Entropy conditioning (A4) does not beat A3, because bridges are well described by a soft target.
-- **S3.** With outliers, A4 beats A3, and X1 (typicality) is at least as good as A4.
+- **S3.** With outliers, A4 beats A3, and X1 (fit weights) is at least as good as A4.
 - **S4.** In the mixed scenario, X1 has the lowest mean loss among the U-based variants.
+
+The reasoning behind S2–S4: entropy is high for bridges *and* outliers, but only outliers are badly described by a soft target. Fit weights respond only to the second.
 
 ## 8. Reporting
 

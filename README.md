@@ -59,7 +59,7 @@ The first draft of our paper described the estimator and an evaluation plan. Bui
 | The combined estimate could fail to be a valid covariance matrix, so the draft needed a repair step after the fact. | An **"angle" combination rule** that is a valid covariance matrix **by construction**, with a short proof. The draft's special cases still hold exactly. |
 | No condition was given for the target itself to be valid. | **Lemma 1**: the soft target is valid whenever within-group correlation ≥ between-group correlation ≥ 0. |
 | The base intensity rule was borrowed from a different target. | **One closed-form rule** that is optimal for each variant's own target and weights, so every comparison is fair. |
-| Membership entropy mixes up two kinds of ambiguity. A *bridge* stock (split between two groups) is described well by a soft target; an *outlier* (fitting no group) is not. | A **typicality** variant that targets outliers only. A **direction test** (γ < 0) checks whether the data even agree with the draft's intuition. |
+| Membership entropy mixes up two kinds of ambiguity. A *bridge* stock (split between two groups) is described well by a soft target; an *outlier* (fitting no group) is not. | A **fit** variant that measures directly how well the target describes each stock. A **direction test** (γ < 0) checks whether the data even agree with the draft's intuition. |
 | The base paper clusters on risk-return statistics, but a correlation target needs groups of stocks that move together. | **Co-movement features** (market-neutral principal-component loadings) as the default, with the draft-faithful features kept as a comparison. |
 
 ## 5. How we try to prove ourselves wrong
@@ -111,4 +111,3 @@ Hemateja, Neerav Mishra, Srijan Singh, Shivansh Katiyar and Tanushri. Atal Bihar
 - Michaud, R. O. (1989). The Markowitz optimization enigma: is "optimized" optimal? *Financial Analysts Journal*, 45(1), 31–42.
 - Schäfer, J., Strimmer, K. (2005). A shrinkage approach to large-scale covariance matrix estimation. *Statistical Applications in Genetics and Molecular Biology*, 4(1).
 - Bezdek, J. C. (1981). *Pattern Recognition with Fuzzy Objective Function Algorithms*. Plenum.
-- Krishnapuram, R., Keller, J. M. (1993). A possibilistic approach to clustering. *IEEE Transactions on Fuzzy Systems*, 1(2), 98–110.

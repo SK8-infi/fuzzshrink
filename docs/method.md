@@ -23,7 +23,7 @@ Each asset is described by a feature vector $z_i$, built from the estimation win
 - Keep the next $k$ components, where $k$ is the number of eigenvalues above the Marchenko–Pastur noise edge $\lambda_+ = (1+\sqrt{N/T})^2$, clipped to $[2, 10]$.
 - Set $z_i = (\sqrt{\lambda_2}\,v_{2,i}, \dots, \sqrt{\lambda_{k+1}}\,v_{k+1,i})$.
 
-Rows are *not* normalised. An asset that loads weakly on every group factor sits near the origin and so is equally far from every group. That is exactly the asset that entropy and typicality should flag.
+Rows are *not* normalised. An asset that loads weakly on every group factor sits near the origin and so is equally far from every group. That is exactly the asset that membership entropy flags.
 
 **Risk-return features (draft-faithful, ablation X4).** These are computed per asset over the window, then z-scored across assets:
 
@@ -51,10 +51,13 @@ $C \in \{2,\dots,8\}$ is chosen by the minimum Xie–Beni index $\mathrm{XB} = \
 
 - **Co-membership** (Eq. 2): $s_{ij} = \sum_c u_{ic}u_{jc}$. This is the probability that $i$ and $j$ land in the same cluster when each is assigned at random from its own membership vector.
 - **Normalised entropy** (Eq. 5): $H_i = -\frac{1}{\log C}\sum_c u_{ic}\log u_{ic}$, with $0\log 0 = 0$ and $H_i = 0$ when $C = 1$.
-- **Typicality (N1).** This is the possibilistic typicality of Krishnapuram and Keller (1993), evaluated at the FCM prototypes:
-  - $t_i = \max_c \big[1 + (d_{ic}^2/\eta_c)^{1/(m-1)}\big]^{-1}$, with cluster scale $\eta_c = \sum_i u_{ic}^m d_{ic}^2/\sum_i u_{ic}^m$.
-  - It measures how well the *best* cluster fits asset $i$. Entropy measures how *evenly split* the asset is.
-  - A bridge stock halfway between two clusters has high entropy but can still be typical. An outlier far from every prototype has low typicality.
+
+Entropy measures how *evenly split* an asset's membership is. It does not measure whether the block structure *describes* the asset, and the two can differ:
+
+- A bridge stock with membership $(0.5, 0.5)$ has high entropy, yet a soft target describes it well: its correlations really are a blend of two groups.
+- An idiosyncratic stock can also have high entropy, and no block target describes it.
+
+Section 4.1 therefore adds a direct measure of describability (N1) as an alternative to entropy.
 
 ## 3. Stage 2: the shrinkage target
 
@@ -93,7 +96,16 @@ This variant gives each pair of clusters its own mean correlation:
 Each asset gets a weight $w_i$, which sets its intensity $\delta_i = \min(1, \delta_0 w_i)$:
 
 - **entropy weights** (draft, Eq. 6): $w_i = (1-H_i)^{\gamma}$;
-- **typicality weights** (N4): $w_i = t_i^{\gamma}$.
+- **fit weights** (N1, N4): $w_i = q_i^{\gamma}$, where
+
+$$q_i = \frac{\sum_{j\ne i}\widehat{\operatorname{Var}}(r_{ij})}{\sum_{j\ne i}(r_{ij}-F_{ij})^2}.$$
+
+$q_i$ compares the sampling noise in asset $i$'s correlations with how far they sit from the target. It is the Schäfer–Strimmer intensity computed on row $i$ alone.
+
+- If the target describes asset $i$ up to noise, $q_i$ is large and the asset is shrunk strongly.
+- If the target misses it systematically, $q_i$ is small and the asset keeps more of its sample correlations.
+
+This is the draft's own intuition, "shrink an asset toward the block structure only to the degree that the block structure actually describes it", measured directly instead of through entropy. The weights still depend on the membership matrix through $F$.
 
 The sign of $\gamma$ sets the direction:
 
@@ -173,7 +185,7 @@ How this differs from the draft rule:
 | Combination rule | Arithmetic, then projection | Angle rule (default); arithmetic kept as X3 | PSD by construction (Prop. 3); no projection to explain away |
 | Target validity | Not addressed | Lemma 1 | States when the target term itself is PSD |
 | Base intensity | "Standard analytic formula or cross-validation" | Closed form for each variant's own target and weights | The standard formula assumes a different target. One rule makes the comparisons fair |
-| Ambiguity signal | Entropy only | Entropy (A4) and typicality (X1) | Entropy treats bridges and outliers alike; only outliers are poorly described by a soft target |
+| Ambiguity signal | Entropy only | Entropy (A4) and direct fit to the target (X1) | Entropy treats bridges and outliers alike; only outliers are poorly described by a soft target |
 | Direction | Assumed (ambiguous assets shrunk less) | Tested: γ = +1 against γ = −1 (A6) | Let the data choose the direction |
 | Clustering features | Risk-return statistics | Co-movement loadings (default); risk-return as X4 | A correlation target needs co-moving groups |
 | Strong baseline | Constant-correlation shrinkage | Adds Ledoit–Wolf (2020) nonlinear shrinkage | The current state of the art for GMV |
@@ -184,4 +196,3 @@ How this differs from the draft rule:
 - Duchi, J., Shalev-Shwartz, S., Singer, Y., Chandra, T. (2008). Efficient projections onto the ℓ1-ball for learning in high dimensions. *ICML*.
 - Higham, N. J. (2002). Computing the nearest correlation matrix: a problem from finance. *IMA Journal of Numerical Analysis*, 22(3), 329–343.
 - Xie, X. L., Beni, G. (1991). A validity measure for fuzzy clustering. *IEEE TPAMI*, 13(8), 841–847.
-- Pal, N. R., Pal, K., Keller, J. M., Bezdek, J. C. (2005). A possibilistic fuzzy c-means clustering algorithm. *IEEE Transactions on Fuzzy Systems*, 13(4), 517–530.
