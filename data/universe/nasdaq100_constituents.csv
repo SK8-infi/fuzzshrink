@@ -1,0 +1,102 @@
+ticker,company,sector,fetched_on
+AAPL,Apple Inc.,Technology,2026-11-10
+ABNB,Airbnb,Consumer Discretionary,2026-11-10
+ADBE,Adobe Inc.,Technology,2026-11-10
+ADI,Analog Devices,Technology,2026-11-10
+ADP,Automatic Data Processing,Industrials,2026-11-10
+ADSK,Autodesk,Technology,2026-11-10
+AEP,American Electric Power,Utilities,2026-11-10
+ALAB,Astera Labs,Technology,2026-11-10
+ALNY,Alnylam Pharmaceuticals,Health Care,2026-11-10
+AMAT,Applied Materials,Technology,2026-11-10
+AMD,Advanced Micro Devices,Technology,2026-11-10
+AMGN,Amgen,Health Care,2026-11-10
+AMZN,Amazon,Consumer Discretionary,2026-11-10
+APP,AppLovin,Technology,2026-11-10
+ARM,Arm Holdings,Technology,2026-11-10
+ASML,ASML Holding,Technology,2026-11-10
+AVGO,Broadcom,Technology,2026-11-10
+AXON,Axon Enterprise,Industrials,2026-11-10
+BKNG,Booking Holdings,Consumer Discretionary,2026-11-10
+BKR,Baker Hughes,Energy,2026-11-10
+CCEP,Coca-Cola Europacific Partners,Consumer Staples,2026-11-10
+CDNS,Cadence Design Systems,Technology,2026-11-10
+CEG,Constellation Energy,Utilities,2026-11-10
+CMCSA,Comcast,Telecommunications,2026-11-10
+COST,Costco,Consumer Discretionary,2026-11-10
+CPRT,Copart,Consumer Discretionary,2026-11-10
+CRWD,CrowdStrike,Technology,2026-11-10
+CRWV,CoreWeave,Technology,2026-11-10
+CSCO,Cisco,Telecommunications,2026-11-10
+CSX,CSX Corporation,Industrials,2026-11-10
+CTAS,Cintas,Industrials,2026-11-10
+DASH,DoorDash,Technology,2026-11-10
+DDOG,Datadog,Technology,2026-11-10
+DXCM,DexCom,Health Care,2026-11-10
+EXC,Exelon,Utilities,2026-11-10
+FANG,Diamondback Energy,Energy,2026-11-10
+FAST,Fastenal,Industrials,2026-11-10
+FER,Ferrovial,Industrials,2026-11-10
+FTNT,Fortinet,Technology,2026-11-10
+GEHC,GE HealthCare,Health Care,2026-11-10
+GILD,Gilead Sciences,Health Care,2026-11-10
+GOOG,Alphabet Inc. (Class C),Technology,2026-11-10
+GOOGL,Alphabet Inc. (Class A),Technology,2026-11-10
+HON,Honeywell Technologies,Industrials,2026-11-10
+HONA,Honeywell Aerospace,Industrials,2026-11-10
+IDXX,Idexx Laboratories,Health Care,2026-11-10
+INTC,Intel,Technology,2026-11-10
+INTU,Intuit,Technology,2026-11-10
+ISRG,Intuitive Surgical,Health Care,2026-11-10
+KDP,Keurig Dr Pepper,Consumer Staples,2026-11-10
+KLAC,KLA Corporation,Technology,2026-11-10
+LIN,Linde plc,Basic Materials,2026-11-10
+LITE,Lumentum,Technology,2026-11-10
+LRCX,Lam Research,Technology,2026-11-10
+MAR,Marriott International,Consumer Discretionary,2026-11-10
+MCHP,Microchip Technology,Technology,2026-11-10
+MDLZ,Mondelez International,Consumer Staples,2026-11-10
+MELI,Mercado Libre,Consumer Discretionary,2026-11-10
+META,Meta Platforms,Technology,2026-11-10
+MNST,Monster Beverage,Consumer Staples,2026-11-10
+MPWR,Monolithic Power Systems,Technology,2026-11-10
+MRNA,Moderna,Health Care,2026-11-10
+MRVL,Marvell Technology,Technology,2026-11-10
+MSFT,Microsoft,Technology,2026-11-10
+MSTR,MicroStrategy,Technology,2026-11-10
+MU,Micron Technology,Technology,2026-11-10
+NBIS,Nebius Group,Technology,2026-11-10
+NFLX,"Netflix, Inc.",Consumer Discretionary,2026-11-10
+NVDA,Nvidia,Technology,2026-11-10
+NXPI,NXP Semiconductors,Technology,2026-11-10
+ODFL,Old Dominion Freight Line,Industrials,2026-11-10
+ORLY,O'Reilly Automotive,Consumer Discretionary,2026-11-10
+PANW,Palo Alto Networks,Technology,2026-11-10
+PAYX,Paychex,Industrials,2026-11-10
+PCAR,Paccar,Consumer Discretionary,2026-11-10
+PDD,PDD Holdings,Technology,2026-11-10
+PEP,PepsiCo,Consumer Staples,2026-11-10
+PLTR,Palantir Technologies,Technology,2026-11-10
+PYPL,PayPal,Industrials,2026-11-10
+QCOM,Qualcomm,Technology,2026-11-10
+REGN,Regeneron Pharmaceuticals,Health Care,2026-11-10
+RKLB,Rocket Lab,Industrials,2026-11-10
+ROP,Roper Technologies,Technology,2026-11-10
+ROST,Ross Stores,Consumer Discretionary,2026-11-10
+SBUX,Starbucks,Consumer Discretionary,2026-11-10
+SHOP,Shopify,Technology,2026-11-10
+SNDK,Sandisk,Technology,2026-11-10
+SNPS,Synopsys,Technology,2026-11-10
+SPCX,SpaceX,Telecommunications,2026-11-10
+STX,Seagate Technology,Technology,2026-11-10
+TER,Teradyne,Technology,2026-11-10
+TMUS,T-Mobile US,Telecommunications,2026-11-10
+TRI,Thomson Reuters,Technology,2026-11-10
+TSLA,"Tesla, Inc.",Consumer Discretionary,2026-11-10
+TTWO,Take-Two Interactive,Consumer Discretionary,2026-11-10
+TXN,Texas Instruments,Technology,2026-11-10
+VRTX,Vertex Pharmaceuticals,Health Care,2026-11-10
+WDAY,"Workday, Inc.",Technology,2026-11-10
+WDC,Western Digital,Technology,2026-11-10
+WMT,Walmart,Consumer Discretionary,2026-11-10
+XEL,Xcel Energy,Utilities,2026-11-10

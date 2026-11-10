@@ -1,0 +1,4 @@
+ticker,valid_from,reason
+FER,2024-05-09,"First day on Nasdaq. Yahoo's earlier history is a backfilled foreign listing with jumps Ferrovial never had (+43% on 2020-03-13, +42% on 2018-05-23)"
+RKLB,2021-08-25,"Rocket Lab's first day after its SPAC merger. Earlier rows are the Vector Acquisition SPAC shell, not the operating company"
+SHOP,2015-05-21,"IPO day. Yahoo's earlier row is the offer price, which turns the first-day pop into a fake daily return"

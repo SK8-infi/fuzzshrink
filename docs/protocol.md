@@ -159,4 +159,11 @@ The reasoning behind S2–S4: entropy is high for bridges *and* outliers, but on
 
 ## 9. Deviations
 
-None yet. Format: date, what changed, why, and which results it affects.
+Format: date, what changed, why, and which results it affects.
+
+- **2026-11-10, before any backtest result.** For three tickers, Yahoo's history begins before the security actually traded in the US:
+  - FER: a backfilled foreign listing with spurious jumps;
+  - RKLB: the SPAC shell before the merger;
+  - SHOP: the IPO offer price.
+
+  Their earlier rows are dropped (`data/universe/listing_overrides.csv`). This affects every empirical result, and was decided while checking data quality (stage 4), not after looking at any portfolio outcome.
