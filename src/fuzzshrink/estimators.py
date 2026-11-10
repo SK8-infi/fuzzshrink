@@ -185,11 +185,14 @@ def fuzzshrink(
     weights: str = "entropy",
     target: str = "two_level",
     combine: str = "angle",
+    delta0_scale: float = 1.0,
 ) -> tuple[np.ndarray, dict]:
     """FuzzShrink covariance estimate (method sections 3-5).
 
     Returns (Sigma_hat, info). Sigma_hat keeps the sample variances; info records the
     target means, the base intensity, the per-asset intensities and the PSD diagnostics.
+    delta0_scale multiplies the base intensity (1 = the pre-registered rule; other
+    values are only used by the post-hoc analysis in scripts/run_exploratory.py).
     """
     U = np.asarray(U, dtype=float)
     if U.shape[0] != stats.N:
@@ -205,7 +208,7 @@ def fuzzshrink(
     H = membership_entropy(U)
     q = fit_ratio(R, F, stats.varR) if weights == "fit" else None
     w = intensity_weights(gamma, entropy=H, fit=q, kind=weights)
-    delta0 = base_intensity(R, F, stats.varR, w)
+    delta0 = base_intensity(R, F, stats.varR, w) * delta0_scale
     delta = np.minimum(1.0, delta0 * w)
 
     if combine == "angle":
