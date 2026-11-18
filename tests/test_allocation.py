@@ -52,3 +52,12 @@ def test_nsga2_is_feasible_and_reasonable(problem):
     assert abs(w.sum() - 1) < 1e-9 and w.min() >= 0 and w.max() <= 0.4 + 1e-9
     exact = max_sharpe_exact(mu, Sigma, cap=0.4)
     assert sharpe(w, mu, Sigma) > 0.8 * sharpe(exact, mu, Sigma)
+
+
+def test_paper_ga_is_feasible_and_near_the_exact_optimum(problem):
+    from fuzzshrink.allocation import ga_sharpe_paper
+    mu, Sigma = problem
+    w = ga_sharpe_paper(mu, Sigma, runs=3, seed=4)
+    assert abs(w.sum() - 1) < 1e-9 and w.min() >= 0
+    exact = max_sharpe_exact(mu, Sigma, cap=1.0)
+    assert sharpe(w, mu, Sigma) > 0.9 * sharpe(exact, mu, Sigma)

@@ -204,7 +204,21 @@ Two honest caveats:
 
 If you can get the paper's own tables (IIITM's Springer access), add them next to these numbers, labelled as an indirect comparison.
 
-### 6.6 Limitations
+### 6.6 The base paper's own 2024 test, rerun (stage 8)
+
+The base paper's headline ($1,000 → $5,344 in 2024) comes from picking the best of 21 settings (2–8 clusters × 3 ways of choosing stocks) **by their 2024 result, the test year itself**. We reran its protocol on its stocks, its costs and its 2024 test year ([protocol](docs/protocol-2024-replication.md), [results](results/replication_2024/README.md)):
+
+| Final wealth from $1,000 in 2024 (mean of 5 seeds) | Setting picked on 2024 (as the paper did) | Setting picked on 2023 (honest) |
+|---|---|---|
+| Rebuild of the base paper's pipeline | $2,543 | **$1,201** |
+| Our pipeline | $1,374 | $1,114 |
+| QQQ (NASDAQ-100 tracker, same costs) | | $1,211 |
+
+- **Picking the setting on the test year roughly doubles the apparent gain.** Picked honestly, the base pipeline ends level with QQQ.
+- **None of our pre-registered stage 8 hypotheses held.** Our pipeline did not beat the rebuild in 2024 under either rule, nor did it beat QQQ.
+- **The paper's $5,344 could not be reproduced.** Our best rebuild, picking on 2024, averaged $2,543. The gap may come from unpublished details, such as its per-stock price LSTMs.
+
+### 6.7 Limitations
 
 - Current constituents only, so the results carry survivorship bias, as in the base paper.
 - One market and one period: tech-heavy and mostly a bull market.

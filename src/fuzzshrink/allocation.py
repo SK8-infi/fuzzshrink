@@ -5,7 +5,7 @@ from __future__ import annotations
 import numpy as np
 from scipy.optimize import minimize
 
-__all__ = ["repair_weights", "nsga2_mean_variance", "max_sharpe_exact", "min_variance_capped"]
+__all__ = ["repair_weights", "nsga2_mean_variance", "max_sharpe_exact", "min_variance_capped", "ga_sharpe_paper"]
 
 
 def repair_weights(w: np.ndarray, cap: float) -> np.ndarray:
@@ -128,3 +128,49 @@ def max_sharpe_exact(mu: np.ndarray, Sigma: np.ndarray, cap: float = 0.3) -> np.
     if not res.success or y.sum() <= 0:
         return min_variance_capped(Sigma, cap)
     return repair_weights(y / y.sum(), cap)
+
+
+def ga_sharpe_paper(mu: np.ndarray, Sigma: np.ndarray, pop: int = 50, generations: int = 100,
+                    runs: int = 10, seed: int = 0) -> np.ndarray:
+    """The base paper's genetic algorithm (its section 3.3), vectorised.
+
+    Fitness is expected return / risk; initial weights are Dirichlet draws; fitness-proportional
+    parent selection with one elite; one-point crossover; Gaussian mutation (sd 0.05, prob 0.05);
+    weights clipped to [0, 1] and renormalised, so zero weights are allowed. Best of `runs` runs.
+    """
+    rng = np.random.default_rng(seed)
+    n = len(mu)
+
+    def fitness(W):
+        var = np.einsum("ij,jk,ik->i", W, Sigma, W)
+        f = (W @ mu) / np.sqrt(np.maximum(var, 0.0))
+        return np.where(var > 0, f, -np.inf)
+
+    def normalise(W):
+        W = np.clip(W, 0.0, 1.0)
+        s = W.sum(axis=1, keepdims=True)
+        W = np.where(s > 0, W / np.where(s > 0, s, 1), 1.0 / n)
+        return W
+
+    best_w, best_f = None, -np.inf
+    for _ in range(runs):
+        W = rng.dirichlet(np.ones(n), size=pop)
+        for _ in range(generations):
+            f = fitness(W)
+            elite = W[np.argmax(f)].copy()
+            finite = np.isfinite(f)
+            p = np.where(finite, f - f[finite].min() + 1e-12, 0.0)
+            p = p / p.sum() if p.sum() > 0 else np.full(pop, 1.0 / pop)
+            a = W[rng.choice(pop, size=pop, p=p)]
+            b = W[rng.choice(pop, size=pop, p=p)]
+            cut = rng.integers(1, n, size=pop)[:, None] if n > 1 else np.ones((pop, 1), int)
+            kids = np.where(np.arange(n)[None, :] < cut, a, b)
+            mutate = rng.random((pop, n)) < 0.05
+            kids = normalise(kids + mutate * rng.normal(0.0, 0.05, (pop, n)))
+            kids[0] = elite
+            W = kids
+        f = fitness(W)
+        i = int(np.argmax(f))
+        if f[i] > best_f:
+            best_f, best_w = f[i], W[i].copy()
+    return best_w
