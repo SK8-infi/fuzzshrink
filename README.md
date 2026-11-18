@@ -218,7 +218,16 @@ The base paper's headline ($1,000 → $5,344 in 2024) comes from picking the bes
 - **None of our pre-registered stage 8 hypotheses held.** Our pipeline did not beat the rebuild in 2024 under either rule, nor did it beat QQQ.
 - **The paper's $5,344 could not be reproduced.** Our best rebuild, picking on 2024, averaged $2,543. The gap may come from unpublished details, such as its per-stock price LSTMs.
 
-### 6.7 Limitations
+### 6.7 Paper 2: a replication study of the base paper (stage 9)
+
+A second paper, [docs/paper2/paper.md](docs/paper2/paper.md), re-examines the base paper under a protocol fixed in advance ([protocol](docs/protocol-replication-paper.md), [results](results/replication_paper/README.md), [table audit](results/replication_paper/audit.md)). Its main findings:
+
+- **The published table is inconsistent.** The reported return (565.89%) exceeds what the reported wealth implies (434.4%). The benchmark rows mix monthly and annual units: on the paper's own formula, the Nasdaq-100's 2024 Sharpe is 2.30, not 0.31.
+- **The forecasts show no skill.** The reported 1.67% price error is worse than a random walk (1.38%), and the LSTM's return forecasts have an information coefficient of about zero (0 of 5 seeds significant).
+- **Over 2019–2024, honestly re-selected each year, the pipeline earns high returns ($1,000 → $9,569 vs QQQ $2,776) by taking high risk.** It holds about 3 stocks at 2.3× QQQ's volatility. Its Sharpe ratio (0.97) matches QQQ (0.93) and trails equal weight (1.05).
+- **Part of the paper's claim holds.** Its clustered best-of-21 beats random selection (p = 0.029), but its module-contribution claims are not statistically significant over six years.
+
+### 6.8 Limitations
 
 - Current constituents only, so the results carry survivorship bias, as in the base paper.
 - One market and one period: tech-heavy and mostly a bull market.

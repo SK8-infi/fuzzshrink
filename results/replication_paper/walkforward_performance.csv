@@ -1,0 +1,8 @@
+Pipeline,"Final wealth ($1,000 in 2019)",Sharpe,Max drawdown
+The paper's pipeline (FULL),"$9,569 ± 4,193",0.97 ± 0.15,-44.2%
+Alt. model 1: random selection,"$2,166 ± 1,097",0.48 ± 0.26,-45.3%
+Alt. model 2: historical means,"$5,033 ± 1,326",1.00 ± 0.16,-34.6%
+Alt. model 3: equal weights,"$5,491 ± 420",0.92 ± 0.03,-49.3%
+Our improvement (IMP),"$3,255 ± 745",0.90 ± 0.11,-25.0%
+QQQ,"$2,776",0.93,-35.0%
+"Equal weight, 85 stocks","$3,082",1.05,-27.4%

@@ -89,4 +89,4 @@ Every hypothesis is reported, whatever it shows. Six years of monthly data, and 
 
 ## 8. Deviations
 
-None yet.
+- **2026-11-18, clarification before any Q2–Q5 result was seen.** S1 and S2 are computed per seed. S1 is supported if the median p-value across seeds, P(null ≥ observed), is below 0.05; per-seed values are reported. For F1, the paper does not say whether its 1.67% MAPE is one-step-ahead or month-ahead, so both random-walk baselines are reported, and the reading in section 3 applies to the one-step baseline.

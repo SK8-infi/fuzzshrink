@@ -90,3 +90,14 @@ def test_cer_difference_rewards_lower_variance_at_equal_mean():
 def test_permutation_pvalue():
     assert permutation_pvalue(0.1, np.array([0.2, 0.3, 0.4])) == pytest.approx(0.25)
     assert permutation_pvalue(0.5, np.array([0.2, 0.3, 0.4])) == pytest.approx(1.0)
+
+
+def test_pbo_is_high_for_pure_noise_and_low_for_a_real_edge():
+    from fuzzshrink.metrics import probability_of_backtest_overfitting
+    pbos = [probability_of_backtest_overfitting(np.random.default_rng(s).standard_normal((120, 20)),
+                                                n_blocks=8)["pbo"] for s in range(20)]
+    assert 0.35 < np.mean(pbos) < 0.65  # about 0.5 on average for pure noise
+    edge = np.random.default_rng(8).standard_normal((120, 20))
+    edge[:, 3] += 0.8  # one configuration is genuinely better
+    out = probability_of_backtest_overfitting(edge, n_blocks=8)
+    assert out["pbo"] < 0.05 and out["n_splits"] == 70
