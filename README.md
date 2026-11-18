@@ -220,7 +220,7 @@ The base paper's headline ($1,000 → $5,344 in 2024) comes from picking the bes
 
 ### 6.7 Paper 2: a replication study of the base paper (stage 9)
 
-A second paper, [docs/paper2/paper.md](docs/paper2/paper.md), re-examines the base paper under a protocol fixed in advance ([protocol](docs/protocol-replication-paper.md), [results](results/replication_paper/README.md), [table audit](results/replication_paper/audit.md)). Its main findings:
+A second paper ([PDF](docs/paper2/latex/paper.pdf), in the Springer Nature journal template matching the base paper; [Markdown version](docs/paper2/paper.md)) re-examines the base paper under a protocol fixed in advance ([protocol](docs/protocol-replication-paper.md), [results](results/replication_paper/README.md), [table audit](results/replication_paper/audit.md)). Its main findings:
 
 - **The published table is inconsistent.** The reported return (565.89%) exceeds what the reported wealth implies (434.4%). The benchmark rows mix monthly and annual units: on the paper's own formula, the Nasdaq-100's 2024 Sharpe is 2.30, not 0.31.
 - **The forecasts show no skill.** The reported 1.67% price error is worse than a random walk (1.38%), and the LSTM's return forecasts have an information coefficient of about zero (0 of 5 seeds significant).

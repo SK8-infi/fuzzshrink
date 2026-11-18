@@ -14,7 +14,7 @@
 \title[Higher returns, same Sharpe ratio]{Higher returns, same Sharpe ratio: a replication of an integrated machine-learning portfolio framework}
 
 %% TODO (team): confirm the corresponding author and the order of authors.
-\author*[1]{\fnm{Shivansh} \sur{Katiyar}}\email{img_2024042@iiitm.ac.in}
+\author*[1]{\fnm{Shivansh} \sur{Katiyar}}\email{img\_2024042@iiitm.ac.in}
 \author[1]{\fnm{Hemateja}}
 \author[1]{\fnm{Neerav} \sur{Mishra}}
 \author[1]{\fnm{Srijan} \sur{Singh}}
@@ -24,7 +24,7 @@
 
 \abstract{Dastkhan, Mosaffa and Fabozzi (2026) propose a portfolio framework that combines fuzzy clustering, an LSTM forecaster and a genetic algorithm, and report that \$1,000 grew to \$5,344 in 2024 with a Sharpe ratio of 11.93 against 0.31 for the Nasdaq-100. We re-examine these claims with the same stock universe, cost assumptions and a reconstruction of the pipeline, under protocols fixed before each computation. The published performance table is internally inconsistent: reported returns exceed those implied by the reported final wealth, and the benchmark rows mix monthly and annual units; on the paper's own formula the Nasdaq-100's 2024 Sharpe ratio is 2.30. The reported 1.67\% price forecast error is worse than a random walk (1.38\%), and the LSTM's return forecasts carry no cross-sectional information. Choosing the model configuration on the test year, as the paper did, roughly doubles the 2024 result relative to choosing it on the preceding year. Over 2019--2024 with honest annual re-selection the pipeline earns high returns, but by holding about three stocks at 2.3 times the index's volatility; its Sharpe ratio (0.97) matches the index (0.93) and trails an equal-weighted portfolio of the same stocks (1.05). The paper's module-contribution claims point in the stated direction but are not statistically significant. The framework's apparent outperformance is largely a matter of risk and reporting rather than predictive skill.}
 
-\keywords{Replication $\cdot$ Portfolio optimization $\cdot$ Fuzzy clustering $\cdot$ LSTM $\cdot$ Backtest overfitting $\cdot$ Sharpe ratio}
+\keywords{Replication, Portfolio optimization, Fuzzy clustering, LSTM, Backtest overfitting, Sharpe ratio}
 
 \maketitle
 
@@ -66,7 +66,7 @@ The reported best configuration, four clusters with maximum-return representativ
 
 \subsection{Data}
 
-We use daily adjusted closing prices from Yahoo Finance for the 88 stocks listed in Appendix~1 of \citet{dastkhan2026}, from January 2017 to December 2024. Three of them (ANSS, EA and WBD) are no longer available following corporate events, leaving 85. Our daily mean returns and standard deviations match the paper's Appendix~1 to median absolute differences of 0.00016 and 0.00046. QQQ proxies the Nasdaq-100 in the backtests; the index levels \^{}NDX and \^{}IXIC are used for the audit.
+We use daily adjusted closing prices from Yahoo Finance for the 88 stocks listed in Appendix~1 of \citet{dastkhan2026}, from January 2017 to December 2024. Three of them (ANSS, EA and WBD) are no longer available following corporate events, leaving 85. Our daily mean returns and standard deviations match the paper's Appendix~1 to median absolute differences of 0.00016 and 0.00046. QQQ proxies the Nasdaq-100 in the backtests; the index levels \textasciicircum{}NDX and \textasciicircum{}IXIC are used for the audit.
 
 \subsection{Reconstruction of the pipeline}
 
@@ -86,14 +86,14 @@ Table~\ref{tab1} compares the annual returns reported by \citet{dastkhan2026} wi
 \caption{Reported annual return against the return implied by the reported final wealth (\$1,000 start)}\label{tab1}
 \begin{tabular}{@{}lrrrr@{}}
 \toprule
-Row (table in the original paper) & \multicolumn{1}{p{1.6cm}}{\raggedleft Reported return (\%)} & \multicolumn{1}{p{1.7cm}}{\raggedleft Implied by wealth (\%)} & \multicolumn{1}{p{1.3cm}}{\raggedleft Reported Sharpe} & \multicolumn{1}{p{1.6cm}}{\raggedleft Return $\div$ risk} \\
+Row (table in the original) & \multicolumn{1}{p{1.6cm}}{\raggedleft Reported return (\%)} & \multicolumn{1}{p{1.7cm}}{\raggedleft Implied by wealth (\%)} & \multicolumn{1}{p{1.3cm}}{\raggedleft Reported Sharpe} & \multicolumn{1}{p{1.6cm}}{\raggedleft Return $\div$ risk} \\
 \midrule
-Proposed model, maximum return (T7) & 565.89 & 434.4 & 11.93 & 11.93 \\
-Proposed model, maximum Sharpe (T7) & 388.45 & 295.8 & 8.95 & 8.95 \\
-Proposed model, minimum risk (T7) & 178.26 & 134.5 & 6.65 & 6.65 \\
-Alternative Model 1, random selection (T10) & 189.00 & 136.9 & 6.20 & 5.91 \\
-Alternative Model 2, historical means (T10) & 23.61 & $-0.05$ & 0.59 & 0.59 \\
-Alternative Model 3, equal weights (T10) & 88.14 & 55.9 & 2.74 & 2.74 \\
+Model, maximum return (T7) & 565.89 & 434.4 & 11.93 & 11.93 \\
+Model, maximum Sharpe (T7) & 388.45 & 295.8 & 8.95 & 8.95 \\
+Model, minimum risk (T7) & 178.26 & 134.5 & 6.65 & 6.65 \\
+Alt.~1, random selection (T10) & 189.00 & 136.9 & 6.20 & 5.91 \\
+Alt.~2, historical means (T10) & 23.61 & $-0.05$ & 0.59 & 0.59 \\
+Alt.~3, equal weights (T10) & 88.14 & 55.9 & 2.74 & 2.74 \\
 Nasdaq Composite (T7) & 1.37 & 30.4 & 0.35 & 0.35 \\
 Nasdaq-100 (T7) & 1.23 & 26.6 & 0.31 & 0.31 \\
 \botrule
@@ -108,7 +108,7 @@ Second, the benchmark rows use different units. The indices' reported annual ret
 \caption{The 2024 benchmarks recomputed from index data}\label{tab2}
 \begin{tabular}{@{}lrrrrrr@{}}
 \toprule
-Index & \multicolumn{1}{p{1.2cm}}{\raggedleft Monthly mean (\%)} & \multicolumn{1}{p{1.1cm}}{\raggedleft Monthly s.d. (\%)} & \multicolumn{1}{p{1.1cm}}{\raggedleft 2024 return (\%)} & \multicolumn{1}{p{1.4cm}}{\raggedleft Wealth, paper's costs (\$)} & \multicolumn{1}{p{1.2cm}}{\raggedleft Sharpe, Eq.~15} & \multicolumn{1}{p{1.1cm}}{\raggedleft Standard Sharpe} \\
+Index & \multicolumn{1}{p{1.2cm}}{\raggedleft Monthly mean (\%)} & \multicolumn{1}{p{1.1cm}}{\raggedleft Monthly s.d. (\%)} & \multicolumn{1}{p{1.1cm}}{\raggedleft 2024 return (\%)} & \multicolumn{1}{p{1.4cm}}{\raggedleft Wealth, paper's costs (\$)} & \multicolumn{1}{p{1.2cm}}{\raggedleft Sharpe, Eq.~15} & \multicolumn{1}{p{1.35cm}}{\raggedleft Standard Sharpe} \\
 \midrule
 Nasdaq Composite & 2.18 & 3.35 & 28.6 & 1,241 & 2.54 & 2.16 \\
 Nasdaq-100 & 1.92 & 3.22 & 24.9 & 1,205 & 2.30 & 1.98 \\
@@ -162,7 +162,7 @@ We extend the test to January 2019--December 2024 (72 months), re-selecting the 
 \caption{2019--2024 with the configuration re-chosen each year on the previous year (five seeds; $\pm$ is the standard deviation across seeds)}\label{tab4}
 \begin{tabular}{@{}lrrr@{}}
 \toprule
-Pipeline & Final wealth (\$) & Sharpe ratio & Maximum drawdown (\%) \\
+Pipeline & Final wealth (\$) & Sharpe ratio & Max.\ drawdown (\%) \\
 \midrule
 Original pipeline & 9,569 $\pm$ 4,193 & 0.97 $\pm$ 0.15 & $-44.2$ \\
 Alternative Model 1: random selection & 2,166 $\pm$ 1,097 & 0.48 $\pm$ 0.26 & $-45.3$ \\
@@ -185,15 +185,15 @@ The pipeline's final wealth is striking, more than three times that of QQQ. Its 
 Table~\ref{tab5} tests the paper's decomposition claims over the six years. Each module raises returns in at least four of five seeds, as the paper claims, but none of the differences is statistically significant. The return gaps are large because the strategy is volatile, and the same volatility makes them statistically indistinguishable from zero. Alternative Model 2, which drops the LSTM, has a slightly higher Sharpe ratio (1.00) and a smaller drawdown, consistent with Section~\ref{sec5.2}: the forecasts add risk rather than information.
 
 \begin{table}[h]
-\caption{The original paper's decomposition claims, 2019--2024 (HAC $t$-tests on monthly return differences)}\label{tab5}
-\begin{tabular}{@{}lrrrl@{}}
+\caption{The original paper's decomposition claims, 2019--2024 (HAC $t$-tests on monthly return differences). ``Supported (raw)'' meets the pre-registered rule but not after Holm adjustment}\label{tab5}
+\begin{tabular}{@{}lrrrp{2.3cm}@{}}
 \toprule
 Claim & \multicolumn{1}{p{1.4cm}}{\raggedleft Return gap (pp/yr)} & \multicolumn{1}{p{1.2cm}}{\raggedleft Median $p$} & \multicolumn{1}{p{1.0cm}}{\raggedleft Holm $p$} & Verdict \\
 \midrule
 Clustering beats random selection & 30.3 & 0.058 & 0.29 & Not supported \\
 LSTM beats historical means & 15.0 & 0.094 & 0.38 & Not supported \\
 Genetic algorithm beats equal weights & 11.0 & 0.105 & 0.38 & Not supported \\
-Pipeline beats QQQ & 27.4 & 0.038 & 0.23 & Supported; not after Holm \\
+Pipeline beats QQQ & 27.4 & 0.038 & 0.23 & Supported (raw) \\
 \botrule
 \end{tabular}
 \end{table}
@@ -226,11 +226,18 @@ Re-examined with its own data, costs and design, the framework of \citet{dastkha
 
 \bmhead{Competing interests} The authors have no competing interests to declare that are relevant to the content of this article.
 
+\bmhead{Ethics approval and consent to participate} Not applicable.
+
+\bmhead{Consent for publication} Not applicable.
+
 \bmhead{Data availability} Daily prices were obtained from Yahoo Finance. The list of stocks, all intermediate results and the protocols are available from the corresponding author on request.
+
+\bmhead{Materials availability} Not applicable.
 
 \bmhead{Code availability} The code that produces every number in this article is available from the corresponding author on request.
 
-%% TODO (team): add an author-contribution statement, as Springer journals require.
+%% TODO (team): replace with each author's contribution, as Springer journals require.
+\bmhead{Author contribution} To be completed by the authors.
 
 \bibliography{references}
 

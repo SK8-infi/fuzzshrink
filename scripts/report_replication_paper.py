@@ -158,6 +158,9 @@ def main():
         ax.spines[sp].set_visible(False)
     fig.tight_layout()
     fig.savefig(OUT / "fig_walkforward_wealth.png", dpi=160)
+    ax.set_title("", loc="left")  # the paper's caption carries the title
+    fig.tight_layout()
+    fig.savefig(ROOT / "docs/paper2/latex/figures/fig_walkforward_wealth.png", dpi=300)
 
     fig, ax = plt.subplots(figsize=(6.4, 3.4))
     s0 = seeds[0]
@@ -174,6 +177,9 @@ def main():
         ax.spines[sp].set_visible(False)
     fig.tight_layout()
     fig.savefig(OUT / "fig_random_null.png", dpi=160)
+    ax.set_title("", loc="left")  # the paper's caption carries the title
+    fig.tight_layout()
+    fig.savefig(ROOT / "docs/paper2/latex/figures/fig_random_null.png", dpi=300)
 
     def md(df):
         cols = list(df.columns)
