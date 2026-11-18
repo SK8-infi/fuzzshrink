@@ -7,6 +7,10 @@
 \usepackage{amsmath}
 \graphicspath{{figures/}}
 \addbibresource{references.bib}
+%% List the paper under study first in the reference list (all others stay in APA order).
+\DeclareSourcemap{\maps[datatype=bibtex]{\map[overwrite]{
+  \step[fieldsource=entrykey, match=\regexp{\Adastkhan2026\Z}, final]
+  \step[fieldset=presort, fieldvalue={aaa}]}}}
 
 \renewcommand*\runningtitle{Risk or skill? Out-of-sample evidence on integrated machine learning portfolio frameworks}
 \renewcommand*\firstpageline{Working paper}
