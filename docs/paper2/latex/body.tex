@@ -1,0 +1,213 @@
+%% Shared article body for paper.tex (styled) and paper-springer-template.tex.
+
+\section{Introduction}\label{sec1}
+
+Machine-learning portfolio frameworks increasingly chain several learned components: clustering to choose assets, deep networks to forecast returns, and metaheuristics to allocate capital. Each component adds tunable choices, while evaluation usually rests on a single backtest. This is precisely the setting in which the finance literature has documented the widest gap between reported and reproducible performance \citep{bailey2014pseudo,harvey2016,hou2020}.
+
+\citet{dastkhan2026}, published in \textit{Annals of Operations Research}, is a clear and influential instance. Their framework clusters 88 Nasdaq stocks by return and risk, selects one representative per cluster, forecasts each representative's next-month price with an LSTM, and sets weights with a Sharpe-maximising genetic algorithm. Tested over the twelve months of 2024, they report a final wealth of \$5,344 from \$1,000 after transaction costs and a Sharpe ratio of 11.93, against 0.35 for the Nasdaq Composite and 0.31 for the Nasdaq-100. A decomposition into three alternative models supports their conclusion that each module contributes independently.
+
+This paper asks whether those conclusions survive four checks: whether the published figures are internally consistent; whether the forecasts show skill; how much of the headline depends on choices made with knowledge of the test year; and whether the conclusions hold over a longer period with honest model selection. We answer with the paper's own tables, the 85 stocks of its universe that remain available, its transaction-cost rule, and a reconstruction of its pipeline. The design, hypotheses and decision rules of every computation were committed to a version-controlled repository before the computation ran.
+
+Our contributions are fourfold. First, we audit the published performance table and identify two arithmetic inconsistencies, both of which inflate the framework's advantage over its benchmarks. Second, we show that the reported forecast accuracy does not exceed a random walk and that the LSTM's return forecasts carry no cross-sectional information. Third, we quantify test-period selection by comparing best-of-21 with previous-year selection, by constructing a random-selection null, and by estimating the probability of backtest overfitting. Fourth, we replicate the paper's decomposition analysis over six years with honest annual re-selection and show that the pipeline's high returns come with commensurate risk.
+
+The remainder of this paper is organised as follows. Section~\ref{sec2} reviews related work. Section~\ref{sec3} summarises the framework under study, and Section~\ref{sec4} describes our data and replication design. Section~\ref{sec5} reports the results, Section~\ref{sec6} discusses them, Section~\ref{sec7} states limitations, and Section~\ref{sec8} concludes.
+
+\section{Literature review}\label{sec2}
+
+\subsection{Backtest overfitting and multiple testing}
+
+When many strategy variants are tried and the best is reported, its backtest overstates its future performance. \citet{bailey2014pseudo} show how quickly in-sample Sharpe ratios inflate with the number of trials; \citet{bailey2014deflated} propose the deflated Sharpe ratio; and \citet{bailey2017pbo} introduce the probability of backtest overfitting (PBO), estimated by combinatorially symmetric cross-validation. \citet{white2000} and \citet{hansen2005} provide formal tests for data snooping, and \citet{harvey2016} argue that new return predictors should clear $t$-statistics near three.
+
+\subsection{Replication and benchmarks in empirical finance}
+
+\citet{hou2020} replicate 452 anomalies and find that most do not survive once microcaps are treated consistently. \citet{demiguel2009} show that the naive $1/N$ portfolio is difficult to beat out of sample because estimation error in expected returns overwhelms the gains from optimisation. \citet{lo2002} shows that Sharpe ratios estimated from short samples are highly uncertain: with twelve monthly returns, the base paper's test length, the standard error of a monthly Sharpe ratio is roughly 0.3.
+
+\subsection{Clustering for portfolio selection}
+
+The base paper builds on work that uses K-means, fuzzy C-means and related methods to diversify asset selection \citep{nanda2010,long2014,khan2022}. We do not dispute that clustering can aid diversification; we test whether the specific gains reported for this framework hold.
+
+\section{The framework under study}\label{sec3}
+
+We summarise \citet{dastkhan2026} from the published article. The data are 88 Nasdaq-listed stocks with complete records from January 2017 to December 2024. The test period is January to December 2024, with monthly rebalancing on an expanding window that begins in January 2017.
+
+In the clustering module, each stock is described by its historical mean daily return and daily standard deviation, and clustered by fuzzy C-means with K-means++ initialisation and Mahalanobis distance. One representative per cluster is chosen by one of three criteria: maximum return, maximum Sharpe ratio or minimum risk. The number of clusters (two to eight) and the criterion are chosen by the highest final investor wealth over the test period. In the forecasting module, an LSTM with two layers of 50 units predicts daily prices for the next month from the two most important features identified by SHAP analysis; accuracy is reported as an average MAPE of 1.67\%. In the allocation module, a genetic algorithm maximises expected return over risk with no short sales and zero weights allowed (population 50, 100 generations, mutation standard deviation 0.05 with probability 0.05, ten runs per month). Transaction costs are 0.1\% for purchases and 0.2\% for sales, charged on the whole portfolio every month.
+
+The reported best configuration, four clusters with maximum-return representatives, turns \$1,000 into \$5,344. Alternative models replace clustering with random selection (Alternative Model 1), forecasts with historical means (Alternative Model 2) and optimisation with equal weights (Alternative Model 3); paired $t$-tests on cumulative returns favour the full model in every case.
+
+\section{Data and replication design}\label{sec4}
+
+\subsection{Data}
+
+We use daily adjusted closing prices from Yahoo Finance for the 88 stocks listed in Appendix~1 of \citet{dastkhan2026}, from January 2017 to December 2024. Three of them (ANSS, EA and WBD) are no longer available following corporate events, leaving 85. Our daily mean returns and standard deviations match the paper's Appendix~1 to median absolute differences of 0.00016 and 0.00046. QQQ proxies the Nasdaq-100 in the backtests; the index levels \textasciicircum{}NDX and \textasciicircum{}IXIC are used for the audit.
+
+\subsection{Reconstruction of the pipeline}
+
+We follow the published description with four necessary choices. Mahalanobis fuzzy C-means is implemented as Euclidean fuzzy C-means on mean and standard deviation whitened by their covariance, which is mathematically equivalent. The forecaster is a pooled single-layer LSTM with 16 units, trained monthly on the previous 504 trading days to predict the next 21-day return from the last 60 daily returns; the paper's per-stock price LSTMs with SHAP feature selection are not fully specified, and Section~\ref{sec7} discusses the implications. Risk is the sample covariance matrix of all daily returns since January 2017. The genetic algorithm follows the published configuration exactly. All sources of randomness (LSTM initialisation, clustering, the genetic algorithm and random selection) are repeated over five seeds.
+
+\subsection{Pre-registration and statistics}
+
+Each analysis was specified in a protocol committed before it ran; two clarifications were logged before any result was seen. Sharpe ratios are the monthly mean divided by the monthly standard deviation, multiplied by $\sqrt{12}$, with a zero risk-free rate. Comparisons use one-sided $t$-tests on monthly return differences with heteroskedasticity- and autocorrelation-consistent standard errors \citep{newey1987}. A hypothesis is counted as supported when the median $p$-value across seeds is below 0.05 and at least three of five seeds point in the same direction; Holm-adjusted $p$-values are reported alongside.
+
+\section{Results}\label{sec5}
+
+\subsection{The published performance table is internally inconsistent}\label{sec5.1}
+
+Table~\ref{tab1} compares the annual returns reported by \citet{dastkhan2026} with the returns implied by the final wealth that the same tables report.
+
+\begin{table}[ht]
+\caption{Reported annual return against the return implied by the reported final wealth (\$1,000 start)}\label{tab1}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrr@{}}
+\tabletoprule
+\tabhead{Row (table in the\\original paper)} & \multicolumn{1}{l}{\tabhead{Reported\\return (\%)}} & \multicolumn{1}{l}{\tabhead{Implied by\\wealth (\%)}} & \multicolumn{1}{l}{\tabhead{Reported\\Sharpe ratio}} & \multicolumn{1}{l}{\tabhead{Reported return\\$\div$ reported risk}} \\
+\midrule
+Model, maximum return (T7) & 565.89 & 434.4 & 11.93 & 11.93 \\
+Model, maximum Sharpe ratio (T7) & 388.45 & 295.8 & 8.95 & 8.95 \\
+Model, minimum risk (T7) & 178.26 & 134.5 & 6.65 & 6.65 \\
+Alternative Model 1 (T10) & 189.00 & 136.9 & 6.20 & 5.91 \\
+Alternative Model 2 (T10) & 23.61 & $-0.05$ & 0.59 & 0.59 \\
+Alternative Model 3 (T10) & 88.14 & 55.9 & 2.74 & 2.74 \\
+Nasdaq Composite (T7) & 1.37 & 30.4 & 0.35 & 0.35 \\
+Nasdaq-100 (T7) & 1.23 & 26.6 & 0.31 & 0.31 \\
+\botrule
+\end{tabular*}
+\end{table}
+
+Two problems follow. First, Eqs.~14--15 of the original paper compound the arithmetic mean monthly return, $(1+\bar R)^{12}-1$, which exceeds the realised compound return whenever returns vary. Every model row therefore reports a return above what its own wealth implies, and the overstatement grows with volatility, flattering the volatile model portfolios more than the benchmarks. Alternative Model 2 illustrates the problem most clearly: it reports a 23.6\% annual return while ending the year with less money than it started with.
+
+Second, the benchmark rows use different units. The indices' reported annual returns of 1.37\% and 1.23\% contradict their own final wealth (+30.4\% and +26.6\%), and their reported annual risk of 3.9--4.0\% matches the indices' \textit{monthly} volatility in 2024. Table~\ref{tab2} recomputes the benchmarks from 2024 index data.
+
+\begin{table}[ht]
+\caption{The 2024 benchmarks recomputed from index data}\label{tab2}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrrrr@{}}
+\tabletoprule
+Index & \multicolumn{1}{l}{\tabhead{Monthly\\mean (\%)}} & \multicolumn{1}{l}{\tabhead{Monthly\\s.d. (\%)}} & \multicolumn{1}{l}{\tabhead{2024\\return (\%)}} & \multicolumn{1}{l}{\tabhead{Wealth after\\costs (\$)}} & \multicolumn{1}{l}{\tabhead{Sharpe,\\Eq.~15}} & \multicolumn{1}{l}{\tabhead{Standard\\Sharpe}} \\
+\midrule
+Nasdaq Composite & 2.18 & 3.35 & 28.6 & 1,241 & 2.54 & 2.16 \\
+Nasdaq-100 & 1.92 & 3.22 & 24.9 & 1,205 & 2.30 & 1.98 \\
+\botrule
+\end{tabular*}
+\end{table}
+
+On consistent units, the published comparison of 11.93 against 0.31, a ratio of 38 to 1, becomes 11.93 against 2.30 under the paper's own formula, or 4.33 against 1.98 under the standard Sharpe ratio recovered from the moments the paper reports. The advantage is roughly two to one: still large, but based on twelve months (Section~\ref{sec5.3}).
+
+\subsection{The forecasts show no measurable skill}\label{sec5.2}
+
+For the same 85 stocks in 2024, a random walk that predicts each day's price as the previous day's has a MAPE of 1.38\%, below the reported 1.67\%. For Amazon, the paper's illustrated example, the random walk scores 1.32\% against the reported 1.33\%. The paper does not state the horizon behind its MAPE: if its forecasts were genuine month-ahead price paths, 1.67\% would beat the month-ahead random walk (4.79\%), but no evidence is given that they were. Price-level MAPE is in any case a poor guide to portfolio value, because price levels are dominated by their own persistence.
+
+What matters for allocation is whether forecasts rank next month's returns correctly. Across 84 monthly rebalances from 2018 to 2024, the cross-sectional rank correlation between our LSTM's forecasts and realised returns (the information coefficient) averages between $-0.009$ and $+0.005$ depending on the seed, and no seed is significant (all one-sided $p>0.4$). This is our forecaster rather than the original; but since the paper reports no return-level accuracy, its claim that the LSTM improves return forecasting rests on price-level fit alone.
+
+\subsection{The headline is a best-of-21 choice made on the test year}\label{sec5.3}
+
+The original paper selects the number of clusters and the representative criterion, 21 combinations in total, by final wealth over 2024, which is also its test year; in its Table~6 the final wealth across combinations ranges from \$1,793 to \$5,344. We rerun the 2024 protocol under two selection rules (Table~\ref{tab3}).
+
+\begin{table}[ht]
+\caption{Final wealth in 2024 from \$1,000 (mean over five seeds)}\label{tab3}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrr@{}}
+\tabletoprule
+ & \multicolumn{1}{l}{\tabhead{Configuration chosen on\\2024 (as published)}} & \multicolumn{1}{l}{\tabhead{Configuration chosen on\\2023, applied to 2024}} \\
+\midrule
+Reconstruction of the pipeline & 2,543 & 1,201 \\
+QQQ, same costs & -- & 1,211 \\
+Equal weight, 85 stocks & -- & 1,121 \\
+Published result & 5,344 & -- \\
+\botrule
+\end{tabular*}
+\end{table}
+
+Choosing on the test year roughly doubles the outcome; chosen honestly, the pipeline ends 2024 level with the Nasdaq-100. Our reconstruction does not reach the published \$5,344 even when choosing on the test year; its best seed reaches \$3,134.
+
+To ask whether the best of 21 configurations beats chance, we repeat the paper's Alternative Model 1 at scale: for each number of clusters, 100 random-selection paths per seed, with new random stocks each month and the same forecasts and genetic algorithm, from which we form the distribution of the best of 21 random configurations. The clustered pipeline's best of 21 beats this null (median $p=0.029$ across seeds), with observed final wealth of \$2,116--\$3,014 against random medians of \$1,570--\$1,718. On this question the original claim holds: choosing the highest-return representative of each cluster did better than random choice in 2024. The published \$5,344, however, lies far beyond anything our reconstruction or its null produced (Fig.~\ref{fig1}).
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{fig_random_null.png}
+\caption{Best of 21 random-selection configurations in 2024 (seed 0), against the reconstruction's best of 21 and the published figure}\label{fig1}
+\end{figure}
+
+Finally, we estimate the probability of backtest overfitting over the 21 configurations' monthly returns from 2018 to 2024, using 924 combinatorially symmetric splits \citep{bailey2017pbo}. PBO ranges from 0.26 to 0.43 across seeds, below the value of 0.5 that would indicate pure overfitting. Selection is therefore informative but costly: the chosen configuration's monthly Sharpe ratio falls by about 40\% out of sample, from 0.41 in-sample to 0.24.
+
+\subsection{Six years, honestly selected: high returns from high risk}\label{sec5.4}
+
+We extend the test to January 2019--December 2024 (72 months), re-selecting the configuration at the start of each year by the previous year's wealth, and rerun the three alternative models in the same way (Table~\ref{tab4} and Fig.~\ref{fig2}).
+
+\begin{table}[ht]
+\caption{2019--2024 with the configuration re-chosen each year on the previous year (five seeds; $\pm$ is the standard deviation across seeds)}\label{tab4}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrr@{}}
+\tabletoprule
+Pipeline & \multicolumn{1}{l}{\tabhead{Final wealth (\$)}} & \multicolumn{1}{l}{\tabhead{Sharpe ratio}} & \multicolumn{1}{l}{\tabhead{Maximum drawdown (\%)}} \\
+\midrule
+Original pipeline & 9,569 $\pm$ 4,193 & 0.97 $\pm$ 0.15 & $-44.2$ \\
+Alternative 1: random selection & 2,166 $\pm$ 1,097 & 0.48 $\pm$ 0.26 & $-45.3$ \\
+Alternative 2: historical means & 5,033 $\pm$ 1,326 & 1.00 $\pm$ 0.16 & $-34.6$ \\
+Alternative 3: equal weights & 5,491 $\pm$ 420 & 0.92 $\pm$ 0.03 & $-49.3$ \\
+QQQ & 2,776 & 0.93 & $-35.0$ \\
+Equal weight, 85 stocks & 3,082 & 1.05 & $-27.4$ \\
+\botrule
+\end{tabular*}
+\end{table}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{fig_walkforward_wealth.png}
+\caption{Wealth paths from \$1,000, 2019--2024, after the original paper's transaction costs (average over seeds)}\label{fig2}
+\end{figure}
+
+The pipeline's final wealth is striking, more than three times that of QQQ. Its risk profile explains it. In an exploratory analysis outside the pre-registered tests, the pipeline holds 3.2 stocks on average, has an annualised volatility of 47.7\% (2.3 times QQQ's 20.6\%) and a beta of 1.10 against QQQ. Per unit of risk it does no better than the market: its Sharpe ratio of 0.97 compares with 0.93 for QQQ and 1.05 for an equal-weighted portfolio of all 85 stocks, and its maximum drawdown of $-44\%$ compares with $-35\%$ and $-27\%$.
+
+Table~\ref{tab5} tests the paper's decomposition claims over the six years. Each module raises returns in at least four of five seeds, as the paper claims, but none of the differences is statistically significant. The return gaps are large because the strategy is volatile, and the same volatility makes them statistically indistinguishable from zero. Alternative Model 2, which drops the LSTM, has a slightly higher Sharpe ratio (1.00) and a smaller drawdown, consistent with Section~\ref{sec5.2}: the forecasts add risk rather than information.
+
+\begin{table}[ht]
+\caption{The original paper's decomposition claims, 2019--2024 (HAC $t$-tests on monthly return differences). ``Supported (raw)'' meets the pre-registered rule but not after Holm adjustment}\label{tab5}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrl@{}}
+\tabletoprule
+Claim & \multicolumn{1}{l}{\tabhead{Return gap\\(pp per year)}} & \multicolumn{1}{l}{\tabhead{Median $p$}} & \multicolumn{1}{l}{\tabhead{Holm $p$}} & Verdict \\
+\midrule
+Clustering beats random selection & 30.3 & 0.058 & 0.29 & Not supported \\
+LSTM beats historical means & 15.0 & 0.094 & 0.38 & Not supported \\
+Genetic algorithm beats equal weights & 11.0 & 0.105 & 0.38 & Not supported \\
+Pipeline beats QQQ & 27.4 & 0.038 & 0.23 & Supported (raw) \\
+\botrule
+\end{tabular*}
+\end{table}
+
+\subsection{A diversified variant lowers risk without raising the Sharpe ratio}\label{sec5.5}
+
+We also tested one improvement fixed in advance: three stocks per cluster instead of one, forecasts shrunk halfway towards their cross-sectional mean, the nonlinear covariance shrinkage of \citet{ledoit2020}, and an exact maximum-Sharpe solver with a 30\% cap per stock. It roughly halved volatility (24.7\%) and drawdown ($-25.0\%$), but its Sharpe ratio (0.90) was no higher. It did not beat the original pipeline's returns ($p=0.92$), nor QQQ significantly ($p=0.45$).
+
+\section{Discussion}\label{sec6}
+
+Some of the original findings survive. Choosing the highest-return stock of each cluster beat random choice in 2024, and over six years the pipeline's returns exceeded the index's in every seed. A practitioner seeking concentrated, high-risk exposure to recent Nasdaq winners could use the framework and would have been rewarded for that risk over 2019--2024.
+
+The paper's central evidence does not survive, however. A Sharpe advantage of 38 to 1 and a five-fold increase in wealth within a year are not robust to consistent units (Section~\ref{sec5.1}), honest configuration choice (Section~\ref{sec5.3}) or a longer test period (Section~\ref{sec5.4}). The forecasting module shows no evidence of skill (Section~\ref{sec5.2}), and the claims that each module contributes are not statistically supported over six years.
+
+For operations research in finance, the framework is a sensible engineering composition, but its evaluation followed a pattern that systematically flatters complex pipelines: a single test year, configuration selected on the test data, metrics that reward volatility, benchmarks reported in different units, and significance tests on cumulative returns, which are strongly autocorrelated. None of these practices is unusual, which is why replication is worthwhile. We suggest four minimal reporting standards for such frameworks: select configurations only on data that precede the test period; report the standard Sharpe ratio and compute benchmarks with the same code as the strategy; report volatility, drawdown and the number of holdings alongside returns; and test over several years against an equal-weighted portfolio as well as an index.
+
+\section{Limitations}\label{sec7}
+
+Our forecaster differs from the original. The per-stock price LSTMs with SHAP feature selection are not fully specified and their code is not public; a better forecaster could change the absolute performance of the pipeline, though not the audit of Section~\ref{sec5.1}, the selection effect of Section~\ref{sec5.3}, or the risk-adjusted comparison of Section~\ref{sec5.4}. We did not reproduce the published \$5,344, which may depend on details we could not recover. Three of the 88 stocks are unavailable, and both studies use current constituents and therefore share survivorship bias. Finally, six years of monthly data provide limited statistical power, and comparisons within 2024 alone provide very little.
+
+\section{Conclusion}\label{sec8}
+
+Re-examined with its own data, costs and design, the framework of \citet{dastkhan2026} earns high returns by taking concentrated and volatile positions in a strongly rising market. It does not earn higher risk-adjusted returns than the index or than equal weighting, its forecasts show no measurable skill, and its headline figures are inflated by arithmetic and selection choices. The broader lesson is economic: a pipeline's value is the return it adds per unit of risk, after its configuration is chosen without knowledge of the future. By that standard, simple diversified portfolios remain the benchmark that machine-learning frameworks must beat.
+
+\backmatter
+
+\section*{Declarations}
+
+\bmhead{Funding} No funding was received for this study.
+
+\bmhead{Competing interests} The authors have no competing interests to declare that are relevant to the content of this article.
+
+\bmhead{Ethics approval and consent to participate} Not applicable.
+
+\bmhead{Consent for publication} Not applicable.
+
+\bmhead{Data availability} Daily prices were obtained from Yahoo Finance. The list of stocks, all intermediate results and the protocols are available from the corresponding author on request.
+
+\bmhead{Materials availability} Not applicable.
+
+\bmhead{Code availability} The code that produces every number in this article is available from the corresponding author on request.
+
+%% TODO (team): replace with each author's contribution, as Springer journals require.
+\bmhead{Author contribution} To be completed by the authors.
+

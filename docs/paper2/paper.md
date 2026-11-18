@@ -1,4 +1,4 @@
-# Higher Returns, Same Sharpe Ratio: A Replication of an Integrated Machine-Learning Portfolio Framework
+# Risk, Not Skill: Re-examining an Integrated Machine Learning Framework for Dynamic Portfolio Management
 
 Hemateja, Neerav Mishra, Srijan Singh, Shivansh Katiyar, Tanushri
 Atal Bihari Vajpayee Indian Institute of Information Technology and Management, Gwalior, India

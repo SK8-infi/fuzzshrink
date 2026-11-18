@@ -143,6 +143,15 @@ def main():
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
+    from matplotlib import font_manager
+
+    # Use Source Sans (the paper's heading face) when the OpenType files are installed.
+    for otf in sorted(Path.home().glob("AppData/Roaming/MiKTeX/fonts/opentype/adobe/sourcesans/SourceSans3-*.otf")):
+        font_manager.fontManager.addfont(str(otf))
+    if any(f.name == "Source Sans 3" for f in font_manager.fontManager.ttflist):
+        plt.rcParams["font.family"] = "Source Sans 3"
+    plt.rcParams.update({"font.size": 10, "axes.edgecolor": "#898781", "axes.labelcolor": "#333333",
+                         "xtick.color": "#555555", "ytick.color": "#555555"})
     colors = {"FULL": "#2a78d6", "IMP": "#eb6834", "QQQ": "#1baf7a", "ALT1": "#b4b2a9"}
     fig, ax = plt.subplots(figsize=(7.2, 3.8))
     for key, lab in (("FULL", LABEL["FULL"]), ("ALT1", LABEL["ALT1"]), ("IMP", LABEL["IMP"])):
@@ -167,12 +176,14 @@ def main():
     rng = np.random.default_rng(s0)
     draws = {C: null[(null.seed == s0) & (null.C == C)].w2024.to_numpy() for C in range(2, 9)}
     sims = [max(rng.choice(draws[C], 3, replace=False).max() for C in range(2, 9)) for _ in range(10_000)]
-    ax.hist(sims, bins=60, color="#b4b2a9", edgecolor="#fcfcfb")
+    edges = np.arange(np.floor(min(sims) / 100) * 100, max(max(sims), 5400) + 100, 100)
+    ax.hist(sims, bins=edges, color="#b4b2a9", edgecolor="#fcfcfb")
+    ax.set_ylabel("Count of resampled grids")
     ax.axvline(s1_rows[0][1], color="#2a78d6", linewidth=2, label=f"Paper's pipeline, best of 21: ${s1_rows[0][1]:,.0f}")
     ax.axvline(5343.96, color="#eb6834", linewidth=2, label="Paper's published $5,344")
     ax.set_xlabel("2024 final wealth of the best of 21 random-selection settings ($)")
     ax.set_title("Best-of-21 under random stock selection (seed 0)", loc="left")
-    ax.legend(fontsize=8, frameon=False, loc="center right")
+    ax.legend(fontsize=8, frameon=False, loc="upper left", bbox_to_anchor=(0.42, 0.98))
     for sp in ("top", "right"):
         ax.spines[sp].set_visible(False)
     fig.tight_layout()

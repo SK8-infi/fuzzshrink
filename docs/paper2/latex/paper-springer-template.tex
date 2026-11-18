@@ -1,0 +1,38 @@
+%% Paper 2 in the Springer Nature journal template (sn-jnl), APA reference style,
+%% matching Annals of Operations Research. Build: latexmk -pdf paper.tex
+%% Needs sn-jnl.cls and sn-apa.bst from Springer Nature's official template package.
+\documentclass[pdflatex,sn-apa]{sn-jnl}
+
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{amsmath,amssymb}
+\usepackage[title]{appendix}
+\graphicspath{{figures/}}
+\newcommand\tabhead[1]{\begin{tabular}[t]{@{}l@{}}#1\end{tabular}}
+\newcommand\tabletoprule{\toprule}
+\setlength\tabcolsep{3pt}
+
+\begin{document}
+
+\title[Risk, not skill]{Risk, not skill: re-examining an integrated machine learning framework for dynamic portfolio management}
+
+%% TODO (team): confirm the corresponding author and the order of authors.
+\author[1]{\fnm{Hemateja}}
+\author[1]{\fnm{Neerav} \sur{Mishra}}
+\author[1]{\fnm{Srijan} \sur{Singh}}
+\author*[1]{\fnm{Shivansh} \sur{Katiyar}}\email{img\_2024042@iiitm.ac.in}
+\author[1]{\fnm{Tanushri}}
+
+\affil*[1]{\orgname{Atal Bihari Vajpayee Indian Institute of Information Technology and Management}, \orgaddress{\city{Gwalior}, \state{Madhya Pradesh}, \country{India}}}
+
+\abstract{Dastkhan, Mosaffa and Fabozzi (2026) propose a portfolio framework that combines fuzzy clustering, an LSTM forecaster and a genetic algorithm, and report that \$1,000 grew to \$5,344 in 2024 with a Sharpe ratio of 11.93 against 0.31 for the Nasdaq-100. We re-examine these claims with the same stock universe, cost assumptions and a reconstruction of the pipeline, under protocols fixed before each computation. The published performance table is internally inconsistent: reported returns exceed those implied by the reported final wealth, and the benchmark rows mix monthly and annual units; on the paper's own formula the Nasdaq-100's 2024 Sharpe ratio is 2.30. The reported 1.67\% price forecast error is worse than a random walk (1.38\%), and the LSTM's return forecasts carry no cross-sectional information. Choosing the model configuration on the test year, as the paper did, roughly doubles the 2024 result relative to choosing it on the preceding year. Over 2019--2024 with honest annual re-selection the pipeline earns high returns, but by holding about three stocks at 2.3 times the index's volatility; its Sharpe ratio (0.97) matches the index (0.93) and trails an equal-weighted portfolio of the same stocks (1.05). The paper's module-contribution claims point in the stated direction but are not statistically significant. The framework's apparent outperformance is largely a matter of risk and reporting rather than predictive skill.}
+
+\keywords{Replication, Portfolio optimization, Fuzzy clustering, LSTM, Backtest overfitting, Sharpe ratio}
+
+\maketitle
+
+\input{body}
+
+\bibliography{references}
+
+\end{document}
