@@ -1,0 +1,9 @@
+prediction,T,statement,evidence,holds
+S1,126,"A2, A3, A4 within 5% (crisp)",spread 12.2%,False
+S2,126,"A3 beats A2, and A4 does not beat A3 (bridges)",A3-A2 -0.0284 (p=0.000); A4-A3 +0.1250 (p=1.000),True
+S3,126,"A4 beats A3, and X1 <= A4 (outliers)",A4-A3 +0.0685 (p=1.000); X1 0.2822 vs A4 0.3553,False
+S4,126,X1 lowest among U-based variants (mixed),best X1 0.3043; X1 0.3043,True
+S1,252,"A2, A3, A4 within 5% (crisp)",spread 4.6%,True
+S2,252,"A3 beats A2, and A4 does not beat A3 (bridges)",A3-A2 -0.0269 (p=0.000); A4-A3 +0.0435 (p=1.000),True
+S3,252,"A4 beats A3, and X1 <= A4 (outliers)",A4-A3 -0.0104 (p=0.002); X1 0.1821 vs A4 0.2046,True
+S4,252,X1 lowest among U-based variants (mixed),best X1 0.2001; X1 0.2001,True

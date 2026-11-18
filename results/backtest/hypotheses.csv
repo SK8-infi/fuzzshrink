@@ -1,0 +1,7 @@
+Hypothesis,Evidence,p (raw),p (Holm),Seeds rejecting,Verdict
+H1: A4 < A1,DM = -0.73,0.233,0.634,0/10,not supported
+H2: A3→A4 change concentrates in the top-entropy quartile,"top-quartile share -7.70 [-79.74, 79.24]; total change -3.84 bps of annual variance",,,,not supported
+H3: A4 < A3,DM = -1.00,0.159,0.634,0/10,not supported
+H4: A4 < A5 (permuted U),"A4 SD 14.60% vs permuted median 14.59% (5th pct 14.43%, n = 200)",0.527,0.634,,not supported
+H5: A4 < A6,DM = -0.96,0.168,0.634,0/10,not supported
+H6: A3 < A2,DM = -3.17,<0.001,0.004,10/10,supported

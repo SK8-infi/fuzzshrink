@@ -159,4 +159,16 @@ The reasoning behind S2–S4: entropy is high for bridges *and* outliers, but on
 
 ## 9. Deviations
 
-None yet. Format: date, what changed, why, and which results it affects.
+Format: date, what changed, why, and which results it affects.
+
+- **2026-11-10, before any backtest result.** For three tickers, Yahoo's history begins before the security actually traded in the US:
+  - FER: a backfilled foreign listing with spurious jumps;
+  - RKLB: the SPAC shell before the merger;
+  - SHOP: the IPO offer price.
+
+  Their earlier rows are dropped (`data/universe/listing_overrides.csv`). This affects every empirical result, and was decided while checking data quality (stage 4), not after looking at any portfolio outcome.
+- **2026-11-10, before any backtest result (clarification).** Section 6 did not say how tests combine across the 10 clustering seeds:
+  - The DM tests, bootstrap intervals and Sharpe-ratio tests are run separately for each seed. Each table reports the median statistic and median p-value across seeds, and how many seeds reject at 5%.
+  - The Holm family uses those median p-values, together with the single pooled permutation p-value of H4.
+  - H2 is computed per seed and reported as the median share and median interval bounds.
+  - The deflated Sharpe ratio uses seed 0's returns for the best configuration. Every evaluated configuration-and-setting cell counts as a trial.
