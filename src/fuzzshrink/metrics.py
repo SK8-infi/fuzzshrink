@@ -149,3 +149,38 @@ def permutation_pvalue(observed: float, null: np.ndarray) -> float:
     """One-sided p-value that the observed value is this low by chance: (1 + #{null <= obs}) / (1 + n)."""
     null = np.asarray(null, float)
     return float((1 + np.sum(null <= observed)) / (1 + len(null)))
+
+
+def probability_of_backtest_overfitting(M: np.ndarray, n_blocks: int = 12) -> dict:
+    """PBO by combinatorially symmetric cross-validation (Bailey et al., 2017).
+
+    M is (T, N): T periods of returns for N configurations. The rows are split into n_blocks
+    contiguous blocks; for every choice of half the blocks as in-sample, the configuration with
+    the best in-sample Sharpe ratio is ranked out of sample. PBO is the share of splits where its
+    out-of-sample rank is at or below the median (logit <= 0).
+    """
+    from itertools import combinations
+
+    M = np.asarray(M, float)
+    T, N = M.shape
+    blocks = np.array_split(np.arange(T), n_blocks)
+
+    def sharpe(X):
+        sd = X.std(axis=0, ddof=1)
+        return np.where(sd > 0, X.mean(axis=0) / np.where(sd > 0, sd, 1), -np.inf)
+
+    logits, degradations = [], []
+    for ins in combinations(range(n_blocks), n_blocks // 2):
+        is_rows = np.concatenate([blocks[b] for b in ins])
+        oos_rows = np.concatenate([blocks[b] for b in range(n_blocks) if b not in ins])
+        sr_is, sr_oos = sharpe(M[is_rows]), sharpe(M[oos_rows])
+        best = int(np.argmax(sr_is))
+        rank = 1 + np.sum(sr_oos < sr_oos[best]) + 0.5 * (np.sum(sr_oos == sr_oos[best]) - 1)
+        omega = rank / (N + 1)
+        logits.append(np.log(omega / (1 - omega)))
+        degradations.append((sr_is[best], sr_oos[best]))
+    logits = np.array(logits)
+    deg = np.array(degradations)
+    return {"pbo": float(np.mean(logits <= 0)), "n_splits": len(logits),
+            "median_logit": float(np.median(logits)),
+            "mean_is_sharpe_of_best": float(deg[:, 0].mean()), "mean_oos_sharpe_of_best": float(deg[:, 1].mean())}

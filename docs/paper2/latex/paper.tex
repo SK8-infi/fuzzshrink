@@ -1,0 +1,44 @@
+%% Paper 2, typeset to match the published layout of the base paper (Springer journal style).
+%% Build:  latexmk -pdf paper.tex      (uses biber for the APA 7 reference list)
+%% For journal submission use paper-springer-template.tex (official sn-jnl template).
+\documentclass[twoside]{article}
+\usepackage{replication-style}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\graphicspath{{figures/}}
+\addbibresource{references.bib}
+%% Reference order: the paper under study first, then work from 2024-2026, then everything older
+%% (alphabetical within each group).
+\DeclareSourcemap{\maps[datatype=bibtex]{
+  \map[overwrite]{
+    \step[fieldsource=year, match=\regexp{\A202[4-6]\Z}, final]
+    \step[fieldset=presort, fieldvalue={bbb}]}
+  \map[overwrite]{
+    \step[fieldsource=entrykey, match=\regexp{\Adastkhan2026\Z}, final]
+    \step[fieldset=presort, fieldvalue={aaa}]}}}
+
+\renewcommand*\runningtitle{Risk or skill? Out-of-sample evidence on integrated machine learning portfolio frameworks}
+\renewcommand*\firstpageline{Working paper}
+\renewcommand*\firstpagelinetwo{November 2026}
+\renewcommand*\articletype{Replication study}
+\renewcommand*\articletitle{Risk or skill? Out-of-sample evidence on integrated machine learning frameworks for dynamic portfolio management}
+%% Author order as requested by the lead author (18 November 2026).
+\renewcommand*\articleauthors{\mbox{Shivansh Katiyar} \kwsep \mbox{Neerav Mishra} \kwsep \mbox{Chandaluri Hemateja} \kwsep \mbox{Srijan Singh} \kwsep \mbox{Tanushri Reddy Dadireddy}}
+\renewcommand*\versionlineone{This version: 18 November 2026}
+\renewcommand*\versionlinetwo{Data and code can be requested from the first author}
+\renewcommand\articleabstract{Dastkhan, Mosaffa and Fabozzi (2026) combine fuzzy clustering, an LSTM forecaster and a genetic algorithm into a portfolio framework and report that \$1,000 grew to \$5,344 in 2024, with a Sharpe ratio of 11.93 against 0.31 for the Nasdaq-100. We test these claims on the same stocks and cost assumptions, using a reconstruction of the pipeline and protocols fixed before each computation. The published performance table does not agree with itself. Its reported returns exceed those implied by its own final-wealth figures, and its benchmark rows mix monthly and annual units. By the paper's own formula, the Nasdaq-100's 2024 Sharpe ratio is 2.30. A random walk forecasts the same stocks' prices with a 1.38\% error, below the 1.67\% reported for the LSTM, and our LSTM's return forecasts do not separate next month's winners from its losers. When the cluster count and selection rule are picked on 2023 rather than on 2024 itself, our reconstruction's 2024 final wealth falls from \$2,543 to \$1,201, about what QQQ earned. Re-choosing the configuration every January over 2019--2024 turns \$1,000 into roughly \$9,600, but the portfolio holds 3.2 stocks on average at 2.3 times the index's volatility, and its Sharpe ratio (0.97) is close to QQQ's (0.93) and below that of an equal-weighted portfolio of the 85 stocks (1.05). Clustering, the LSTM and the genetic algorithm each add return in most seeds, but no difference passes a HAC $t$-test at the 5\% level. Most of the reported edge comes from risk and from how results were computed and selected, with little left that forecasting skill would need to explain.}
+\renewcommand*\articlekeywords{Reproducibility \kwsep \mbox{Asset allocation} \kwsep \mbox{Fuzzy C-means} \kwsep LSTM \kwsep \mbox{Selection bias} \kwsep \mbox{Risk-adjusted performance}}
+
+\begin{document}
+
+\maketitlepage
+\firstpagenotes{%
+  \noteline{\raisebox{-1.5pt}{\fontsize{11.56}{11.56}\selectfont\Letter}}{Shivansh Katiyar\\img\_2024042@iiitm.ac.in}%
+  \vskip 7.5pt
+  \noteline{}{Roll numbers, in author order: 2024IMG-042, 2024IMG-029, 2024IMG-014, 2024IMG-046 and 2024IMG-050}}
+
+\input{body}
+
+\printbibliography[heading=bibliography, title=References]
+
+\end{document}
